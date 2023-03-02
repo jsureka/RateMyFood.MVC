@@ -1,21 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RateMyFood.MVC.Models;
+using RateMyFood.MVC.ViewModels;
 using System.Diagnostics;
 
 namespace RateMyFood.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IPieRepository _pieRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IPieRepository pieRepository, ILogger<HomeController> logger)
         {
+            _pieRepository = pieRepository;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var piesOfTheWeek = _pieRepository.PiesOfTheWeek;
+            var homeViewModel = new HomeViewModel(piesOfTheWeek);
+            return View(homeViewModel);
+
         }
 
         public IActionResult Privacy()
